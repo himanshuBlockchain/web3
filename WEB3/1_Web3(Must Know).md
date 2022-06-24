@@ -26,8 +26,9 @@ web3.eth.getBalance("0xBcE195d127cE562D435d624fF9338a999eAE2a49").then(function(
 8. **How to send ethers from 1 address to another** // Note Infura do not support this eth_sendTransaction Function
 web3.eth.sendTransaction({from:"<fromaddress>",to:"<toaddress>",value:web3.utils.toWei("1","ether")});
 
-OR
+**OR**
+
 web3.eth.sendTransaction({from:"0x1D1175D8C5725005B11dA1840413D17218bBb81e",to:"0x2779D30D063e2E86CFa77C7cf91E5bd2c1626999",value:web3.utils.toWei("4","ether")});
 
-9. Print All Accounts(Wallet Address) in Ganache
+9. **How to All Accounts(Wallet Address) in Ganache**
 web3.eth.getAccounts().then(console.log);
