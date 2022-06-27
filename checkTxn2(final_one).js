@@ -7,31 +7,55 @@ web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
 
 fs = require("fs");
 
+const transferFrom = async (walletAddress, contractAddress, ABI) => {
+  let contract = new web3.eth.Contract(ABI, contractAddress);
+  let endBlockNumber = await web3.eth.blockNumber;
+
+  let getEvent = await contract.getPastEvents("Transfer", {
+    filter: { from: walletAddress },
+    fromBlock: 0,
+    toBlock: endBlockNumber,
+  });
+  return getEvent;
+};
+
+const transferTo = async (walletAddress, contractAddress, ABI) => {
+  let endBlockNumber = await web3.eth.blockNumber;
+  let contract = new web3.eth.Contract(ABI, contractAddress);
+
+  let getEvent = await contract.getPastEvents("Transfer", {
+    filter: { to: walletAddress },
+    fromBlock: 0,
+    toBlock: endBlockNumber,
+  });
+
+  return getEvent;
+};
+
 async function getAllEvents() {
   let walletAddress = "0x59A80b43F6c74743EE0e3796fFE5915529260476";
   let contractAddress = "0xd3FFDD6082De9bA9c8da26ce2787429B3241A5D7";
   let ABI = JSON.parse(await fs.readFileSync("ABI.txt").toString());
 
-  let endBlockNumber = await web3.eth.blockNumber;
-  let contract = new web3.eth.Contract(ABI, contractAddress);
-
-  let getEvent = await contract.getPastEvents("Transfer", {
-    filter: [{ to: walletAddress } || { from: walletAddress }],
-    fromBlock: 0,
-    toBlock: endBlockNumber,
-  });
-
+  let fromEvents = await transferFrom(walletAddress, contractAddress, ABI);
+  let toEvents = await transferTo(walletAddress, contractAddress, ABI);
+  // console.log(fromEvents);
+  // console.log(toEvents);
   var txnHistory = [];
-  getEvent.forEach(async function (e) {
+  fromEvents.forEach(async function (e) {
     // console.log(e);
     txnHistory.push({ txnHash: e.transactionHash, txnData: e.raw });
     // console.log(e.returnValues);
   });
 
-  console.log(getEvent.length);
+  toEvents.forEach(async function (e) {
+    // txnHistory.push(e.raw)
+    txnHistory.push({ txnHash: e.transactionHash, txnData: e.raw });
+    // console.log(e.returnValues);
+  });
 
   txnHistory.forEach(async function (e) {
-    console.table(await getTxnDetail(e));
+    console.log(await getTxnDetail(e));
   });
 }
 
@@ -59,12 +83,12 @@ async function getTxnDetail(txnEventData) {
   data = web3.utils.fromWei(data, "ether");
 
   let result = {
-    from: convertProperWalletAddress(from),
-    to: convertProperWalletAddress(to),
-    value: Number(data),
+    from: from,
+    to: to,
+    value: data,
     timestamp: txnTimeStamp.timestamp,
     txnhash: txnHash,
-    // txnReceipt: txnReceipt,
+    txnReceipt: txnReceipt,
   };
   return result;
   // console.log(result);
@@ -102,12 +126,3 @@ async function getAllEvents1() {
 }
 
 // getAllEvents1();
-
-function convertProperWalletAddress(walletAddress) {
-  return "0x" + walletAddress.slice(26);
-}
-
-// let x = convertProperWalletAddress(
-//   "0x000000000000000000000000e11fc0fd7538809bcf57c7ba46f675f9e9b3cece"
-// );
-// console.log(x);
