@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
     "big-number": "^2.0.0",
     "fs": "^0.0.1-security",
     "solc": "^0.8.15",
