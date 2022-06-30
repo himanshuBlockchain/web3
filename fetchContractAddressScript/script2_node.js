@@ -177,6 +177,13 @@ let hello = [
 
 // console.log(hello);
 
+
+// Learn how to use String Functions
+// String Function : indexOf
+// String Function : lastIndexOf
+// String Function : slice
+// String Function : split
+// Learn How to save file
 var dataArray = [];
 hello.forEach((element) => {
   let index1 = element.href.indexOf("=");
