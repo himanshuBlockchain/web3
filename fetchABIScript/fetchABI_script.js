@@ -15,7 +15,7 @@ async function getABI_fromContractAddress(contractAddress) {
 
     //Creating File And Saving The Same if Request is successful
     if (response.data.status ==1){
-        fs.writeFileSync( `ABI_List/${contractAddress}.js`, ABI )
+        fs.writeFileSync( `fetchABIScript/ABI_List/${contractAddress}.js`, ABI )
     }
   } catch (error) {
     console.error(error);
