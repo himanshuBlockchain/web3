@@ -12,3 +12,4 @@ Learn how to run ganache on  linux
 
 # fetchContractAddressScript
 Here we can learn about Webcrawling in script1_chrome.js and also how to use that data to fetch details script1_node.js
+I have used : https://www.coingecko.com/en/exchanges/sushiswap_arbitrum for data crawling
